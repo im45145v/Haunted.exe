@@ -1,0 +1,43 @@
+:root { --g:#39ff88; --r:#ff3355; --dim:#0b1a12; font-family: "Courier New", monospace; }
+* { box-sizing: border-box; }
+html,body { margin:0; height:100%; background:#000; color:var(--g); overflow:hidden; }
+canvas#scene { position:fixed; inset:0; width:100%; height:100%; display:block; }
+#crt { position:fixed; inset:0; pointer-events:none;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px),
+              radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.85) 100%);
+  animation: flick 4s infinite; }
+@keyframes flick { 0%,100%{opacity:1} 48%{opacity:.92} 50%{opacity:.8} 52%{opacity:1} }
+.hidden { display:none !important; }
+button { font:inherit; color:var(--g); background:rgba(0,20,10,.8); border:1px solid var(--g); padding:.5em 1em; cursor:pointer; letter-spacing:.1em; }
+button:hover:not(:disabled) { background:var(--g); color:#000; }
+button:disabled { opacity:.35; cursor:default; }
+button.bad { color:var(--r); border-color:var(--r); } button.bad:hover { background:var(--r); color:#000; }
+select,input { font:inherit; color:var(--g); background:rgba(0,10,5,.9); border:1px solid #1f6b43; padding:.5em; }
+#hud { position:fixed; top:0; left:0; right:0; display:flex; justify-content:space-between; align-items:center; padding:.8rem 1.2rem; z-index:5; }
+#timer { font-size:2.2rem; text-shadow:0 0 12px var(--g); } #timer.low { color:var(--r); text-shadow:0 0 14px var(--r); animation:pulse .8s infinite; }
+@keyframes pulse { 50% { opacity:.4 } }
+#meters span { margin:0 1em; opacity:.85; } #meters b { letter-spacing:.2em; }
+#decide button { margin-left:.6rem; }
+#panel { position:fixed; top:4.5rem; right:1rem; width:min(24rem,32vw); max-height:55vh; overflow:auto; background:rgba(0,12,6,.82); border:1px solid #1f6b43; padding:.8rem; z-index:5; font-size:.85rem; }
+#panel h3 { margin:.2rem 0 .4rem; font-size:.9rem; letter-spacing:.2em; color:#8dffbb; }
+.clue { border:1px solid #1f6b43; padding:.4rem; margin:.3rem 0; cursor:pointer; } .clue.sel { background:var(--g); color:#000; }
+.claim { border-left:3px solid var(--r); padding:.3rem .5rem; margin:.4rem 0; } .claim.done { border-color:var(--g); opacity:.55; text-decoration:line-through; }
+.claim button { margin-top:.3rem; font-size:.8rem; padding:.2em .6em; }
+#hint { opacity:.6; font-size:.75rem; }
+#dialogue { position:fixed; left:1rem; bottom:1rem; width:min(46rem,62vw); z-index:5; background:rgba(0,10,5,.8); border:1px solid #1f6b43; padding:.7rem; }
+#log { height:8.5rem; overflow:auto; font-size:1rem; line-height:1.4; }
+#log p { margin:.25rem 0; } .ghost { color:#9dfcc6; text-shadow:0 0 6px var(--g); } .system { color:#7aa; font-style:italic; } .player { color:#ffd66b; }
+#chat { display:flex; gap:.5rem; margin-top:.5rem; } #chat-input { flex:1; }
+#toast { position:fixed; top:35%; left:50%; transform:translateX(-50%); font-size:1.6rem; z-index:20; pointer-events:none; opacity:0; transition:opacity .4s; text-shadow:0 0 14px currentColor; text-align:center; }
+#toast.show { opacity:1; }
+.overlay { position:fixed; inset:0; z-index:10; background:rgba(0,0,0,.88); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem; gap:1rem; }
+h1 { font-size:clamp(2.2rem,8vw,6rem); margin:0; letter-spacing:.15em; text-shadow:0 0 20px var(--g); position:relative; }
+h1::before,h1::after { content:attr(data-text); position:absolute; left:0; right:0; opacity:.6; }
+h1::before { color:var(--r); animation:gl1 2.5s infinite steps(1); } h1::after { color:#38f; animation:gl2 3.1s infinite steps(1); }
+@keyframes gl1 { 0%,92%{transform:none;clip-path:inset(0)} 93%{transform:translate(-6px,2px);clip-path:inset(20% 0 55% 0)} 96%{transform:translate(5px,-2px);clip-path:inset(60% 0 10% 0)} }
+@keyframes gl2 { 0%,90%{transform:none;clip-path:inset(0)} 91%{transform:translate(6px,0);clip-path:inset(40% 0 30% 0)} 95%{transform:translate(-4px,2px);clip-path:inset(5% 0 80% 0)} }
+.sub { opacity:.75; max-width:40rem; } .keys { opacity:.5; font-size:.8rem; }
+.cfg { display:flex; flex-direction:column; gap:.5rem; align-items:center; } .cfg label { display:flex; gap:.6rem; align-items:center; }
+.big { font-size:1.4rem; padding:.6em 2em; }
+#ending-text { max-width:44rem; font-size:1.2rem; line-height:1.6; }
+@media (max-width:800px) { #panel { width:90vw; max-height:30vh; top:4rem; right:5vw } #dialogue { width:96vw; left:2vw } }

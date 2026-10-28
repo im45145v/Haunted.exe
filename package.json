@@ -1,0 +1,13 @@
+{
+  "name": "haunted-exe",
+  "version": "1.0.0",
+  "description": "HAUNTED.EXE - an AI-powered interactive horror experience (Hacktoberfest 2026: Ghost in the Machine)",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js"
+  }
+}

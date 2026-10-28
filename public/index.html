@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HAUNTED.EXE</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23020604'/%3E%3Ccircle cx='8' cy='8' r='5' fill='%2339ff88'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div id="crt"></div>
+
+<div id="hud" class="hidden">
+  <div id="timer">05:00</div>
+  <div id="meters"><span>TRUST <b id="trust"></b></span><span>RAGE <b id="rage"></b></span></div>
+  <div id="decide">
+    <button id="btn-release" class="good">RELEASE</button>
+    <button id="btn-contain" class="bad">CONTAIN</button>
+  </div>
+</div>
+
+<aside id="panel" class="hidden">
+  <h3>EVIDENCE</h3>
+  <div id="clues"><em>Click objects in the room.</em></div>
+  <h3>TESTIMONY</h3>
+  <div id="claims"></div>
+  <p id="hint">Select evidence, then CONFRONT a lie. Wrong guesses enrage her.</p>
+</aside>
+
+<section id="dialogue" class="hidden">
+  <div id="log"></div>
+  <form id="chat" autocomplete="off">
+    <input id="chat-input" maxlength="300" placeholder="Speak to the ghost..." />
+    <button type="submit">SEND</button>
+  </form>
+</section>
+
+<div id="toast"></div>
+
+<section id="title" class="overlay">
+  <h1 data-text="HAUNTED.EXE">HAUNTED.EXE</h1>
+  <p class="sub">A ghost is trapped in the machine. It is lying to you.</p>
+  <div class="cfg">
+    <label>GHOST MIND
+      <select id="provider"></select>
+    </label>
+    <label>MODEL <input id="model" placeholder="default"></label>
+    <small id="provider-status"></small>
+  </div>
+  <button id="btn-start" class="big">BOOT</button>
+  <p class="keys">F fullscreen &middot; M mute &middot; V voice &middot; works offline without any model</p>
+</section>
+
+<section id="ending" class="overlay hidden">
+  <h1 id="ending-title"></h1>
+  <p id="ending-text"></p>
+  <p id="ending-stats" class="sub"></p>
+  <button id="btn-again" class="big">REBOOT</button>
+</section>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
