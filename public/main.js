@@ -2,12 +2,12 @@ const $ = (id) => document.getElementById(id);
 const canvas = $('scene');
 const ctx = canvas.getContext('2d');
 
-let sid = null, state = null, selectedClue = null, lastLogLen = 0, muted = false, voiceOn = false;
+let sid = null, state = null, selectedClue = null, lastLogKey = '', muted = false, voiceOn = false;
 let glitch = 0, flash = 0, t = 0, mouse = { x: -1, y: -1 };
 
 const SPOTS = {
-  terminal: [0.12, 0.3], badge: [0.14, 0.62], photo: [0.3, 0.7],
-  musicbox: [0.56, 0.62], voicemail: [0.6, 0.3], notice: [0.36, 0.14]
+  terminal: [0.1, 0.28], badge: [0.08, 0.46], photo: [0.17, 0.62],
+  musicbox: [0.56, 0.58], voicemail: [0.57, 0.3], notice: [0.36, 0.12]
 };
 const MOODS = { guarded: '#39ff88', uneasy: '#d8ff39', angry: '#ff3355', calm: '#7fd6ff', afraid: '#c9a7ff' };
 
@@ -57,15 +57,17 @@ const fmt = (ms) => { const s = Math.ceil(ms / 1000); return `${String(Math.floo
 function renderLog() {
   const log = $('log');
   const entries = state.log;
-  if (entries.length === lastLogLen && log.childElementCount === entries.length) return;
-  lastLogLen = entries.length;
+  const last = entries[entries.length - 1];
+  const key = `${entries.length}|${last ? last.speaker + last.text : ''}`;
+  if (key === lastLogKey) return;
+  lastLogKey = key;
   log.replaceChildren();
   entries.forEach((e, i) => {
     const p = document.createElement('p'); p.className = e.speaker;
     const prefix = e.speaker === 'ghost' ? 'WREN> ' : e.speaker === 'player' ? 'YOU> ' : '';
     p.textContent = prefix + e.text; log.appendChild(p);
-    if (i === entries.length - 1 && e.speaker === 'ghost') speak(e.text);
   });
+  if (last && last.speaker === 'ghost') speak(last.text);
   log.scrollTop = log.scrollHeight;
 }
 
@@ -120,7 +122,7 @@ async function begin() {
   initAudio();
   const provider = $('provider').value;
   if (provider) await api('/api/config', 'POST', { provider, model: $('model').value.trim() || undefined });
-  const r = await api('/api/new', 'POST'); sid = r.sid; state = r.state; lastLogLen = 0; selectedClue = null;
+  const r = await api('/api/new', 'POST'); sid = r.sid; state = r.state; lastLogKey = ''; selectedClue = null;
   apply(await api('/api/start', 'POST'));
   $('title').classList.add('hidden'); $('ending').classList.add('hidden');
   ['hud', 'panel', 'dialogue'].forEach((i) => $(i).classList.remove('hidden'));
@@ -141,18 +143,26 @@ async function confront(claim) {
   selectedClue = null; apply(r);
 }
 
+let armed = null;
 async function decide(choice) {
-  const msg = choice === 'release' ? 'Release the ghost? This is final.' : 'Contain the ghost? This is final.';
-  if (!confirm(msg)) return;
+  const btn = $(choice === 'release' ? 'btn-release' : 'btn-contain');
+  if (armed !== choice) {
+    disarm(); armed = choice; btn.textContent = 'CONFIRM? FINAL';
+    armed_t = setTimeout(disarm, 3500);
+    return;
+  }
+  disarm();
   apply(await api('/api/decide', 'POST', { choice }));
 }
+let armed_t;
+function disarm() { clearTimeout(armed_t); armed = null; $('btn-release').textContent = 'RELEASE'; $('btn-contain').textContent = 'CONTAIN'; }
 
 $('chat').addEventListener('submit', async (ev) => {
   ev.preventDefault();
   const input = $('chat-input'); const message = input.value.trim(); if (!message) return;
-  input.value = ''; input.disabled = true;
+  input.value = ''; input.disabled = true; input.placeholder = 'WREN is listening...';
   const r = await api('/api/chat', 'POST', { message });
-  input.disabled = false; input.focus();
+  input.disabled = false; input.placeholder = 'Speak to the ghost...'; input.focus();
   if (r.result?.reply) { for (let i = 0; i < 3; i++) setTimeout(sfx.type, i * 60); glitch = Math.max(glitch, 0.4); }
   apply(r);
 });

@@ -43,3 +43,33 @@ test('uses openai-compatible provider when available', async () => {
   srv.close();
   assert.deepEqual(r, { text: 'i see you.', source: 'llamacpp' });
 });
+
+async function mock(handler) {
+  const http = await import('node:http');
+  const srv = http.createServer(handler);
+  await new Promise((r) => srv.listen(0, '127.0.0.1', r));
+  return { srv, url: `http://127.0.0.1:${srv.address().port}` };
+}
+
+for (const [name, handler] of [
+  ['HTTP 500', (q, s) => { s.statusCode = 500; s.end('boom'); }],
+  ['invalid JSON', (q, s) => { s.end('<html>not json'); }],
+  ['wrong shape', (q, s) => { s.end('{"foo":1}'); }],
+  ['empty content', (q, s) => { s.end('{"message":{"content":"  "}}'); }]
+]) {
+  test(`ollama failure (${name}) falls back to scripted`, async () => {
+    const { srv, url } = await mock(handler);
+    const v = new GhostVoice({ HAUNTED_PROVIDER: 'ollama', HAUNTED_BASE_URL: url });
+    const r = await v.reply('hello', base);
+    srv.close();
+    assert.equal(r.source, 'scripted'); assert.ok(r.text.length > 0);
+  });
+}
+
+test('ollama success path uses /api/chat message content', async () => {
+  const { srv, url } = await mock((q, s) => { assert.equal(q.url, '/api/chat'); s.end('{"message":{"content":"<think>x</think>i am here."}}'); });
+  const v = new GhostVoice({ HAUNTED_PROVIDER: 'ollama', HAUNTED_BASE_URL: url });
+  const r = await v.reply('hello', base);
+  srv.close();
+  assert.deepEqual(r, { text: 'i am here.', source: 'ollama' });
+});

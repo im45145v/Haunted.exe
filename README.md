@@ -17,7 +17,7 @@ The game is fully playable with **no model configured** (offline scripted ghost)
 - Click glowing objects in the room to collect 6 clues.
 - The ghost tells 3 lies (right panel). Select a clue, then **CONFRONT** the lie it refutes.
 - Wrong evidence raises her RAGE; at 4 the power dies. Correct evidence raises TRUST.
-- RELEASE or CONTAIN at any time; the ending depends on whether you uncovered all 3 lies.
+- RELEASE or CONTAIN at any time (click twice to confirm); the ending depends on whether you uncovered all 3 lies.
 - Timer expiry also ends the game.
 
 Endings: `LET GO` (release with truth), `UNLEASHED` (release blind), `THE QUIET ROOM` (contain with truth), `STATIC` (contain blind), `BLACKOUT` (time out or rage).

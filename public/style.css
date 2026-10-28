@@ -25,7 +25,7 @@ select,input { font:inherit; color:var(--g); background:rgba(0,10,5,.9); border:
 .claim button { margin-top:.3rem; font-size:.8rem; padding:.2em .6em; }
 #hint { opacity:.6; font-size:.75rem; }
 #dialogue { position:fixed; left:1rem; bottom:1rem; width:min(46rem,62vw); z-index:5; background:rgba(0,10,5,.8); border:1px solid #1f6b43; padding:.7rem; }
-#log { height:11rem; overflow:auto; font-size:1rem; line-height:1.4; }
+#log { height:8.5rem; overflow:auto; font-size:1rem; line-height:1.4; }
 #log p { margin:.25rem 0; } .ghost { color:#9dfcc6; text-shadow:0 0 6px var(--g); } .system { color:#7aa; font-style:italic; } .player { color:#ffd66b; }
 #chat { display:flex; gap:.5rem; margin-top:.5rem; } #chat-input { flex:1; }
 #toast { position:fixed; top:35%; left:50%; transform:translateX(-50%); font-size:1.6rem; z-index:20; pointer-events:none; opacity:0; transition:opacity .4s; text-shadow:0 0 14px currentColor; text-align:center; }

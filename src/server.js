@@ -73,6 +73,7 @@ export function createApp({ env = process.env, now = () => Date.now() } = {}) {
         try {
           const ctx = g.ghostContext();
           const r = await voice.reply(msg, ctx, s.history);
+          if (g.snapshot().phase !== 'playing') return send(res, 400, { error: 'not playing' });
           g.say('player', msg);
           g.say('ghost', r.text);
           s.history.push({ role: 'user', content: msg }, { role: 'assistant', content: r.text });
